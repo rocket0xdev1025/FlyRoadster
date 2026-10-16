@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Flying Solana Roadster ($FSR)</title>
+  <meta name="description" content="Flying Solana Roadster is blazing through the blockchain, flying past the bears, and taking memes to orbit. Buy $FSR on Solana." />
+  <meta name="theme-color" content="#2a0a4e" />
+  <link rel="icon" href="logo.jpg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ["Orbitron", "sans-serif"],
+            body: ["Sora", "sans-serif"],
+          },
+          colors: {
+            ink: "#100614",
+            violet: {
+              glow: "#a78bfa",
+              core: "#7c3aed",
+              deep: "#4c1d95",
+            },
+            gold: {
+              light: "#ffe7a3",
+              core: "#f6c15b",
+              deep: "#ff8a3d",
+            },
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    :root { color-scheme: dark; }
+    html { scroll-behavior: smooth; }
+    body { font-family: Sora, sans-serif; background: #100614; }
+    ::selection { background: #7c3aed; color: white; }
+    :focus-visible { outline: 2px solid #f6c15b; outline-offset: 3px; }
+    ::-webkit-scrollbar { width: 10px; }
+    ::-webkit-scrollbar-track { background: #100614; }
+    ::-webkit-scrollbar-thumb { background: linear-gradient(#7c3aed, #f6c15b); border-radius: 99px; }
+
+    .sky {
+      background-image: url("banner.jpg");
+      background-size: cover;
+      background-position: center 30%;
+    }
+    .sky-grade {
+      background:
+        linear-gradient(180deg, rgba(12, 4, 24, 0.72) 0%, rgba(16, 6, 32, 0.18) 26%, rgba(18, 6, 36, 0.12) 48%, rgba(12, 4, 22, 0.78) 74%, rgba(8, 3, 16, 0.94) 100%),
+        linear-gradient(115deg, rgba(76, 29, 149, 0.28), rgba(255, 138, 61, 0.08) 42%, rgba(56, 189, 248, 0.12) 100%);
+    }
+    .glass {
+      background: linear-gradient(180deg, rgba(22, 8, 42, 0.72), rgba(10, 4, 20, 0.78));
+      border: 1px solid rgba(196, 181, 253, 0.22);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(16px);
+    }
+    .hud-corner { position: relative; }
+    .hud-corner::before,
+    .hud-corner::after {
+      content: "";
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      pointer-events: none;
+    }
+    .hud-corner::before {
+      top: 8px; left: 8px;
+      border-top: 1.5px solid #f6c15b;
+      border-left: 1.5px solid #f6c15b;
+    }
+    .hud-corner::after {
+      right: 8px; bottom: 8px;
+      border-right: 1.5px solid #c4b5fd;
+      border-bottom: 1.5px solid #c4b5fd;
+    }
+    .headlight {
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #fff 20%, #f6c15b 50%, #fff 80%, transparent);
+      box-shadow: 0 0 16px rgba(255, 255, 255, 0.85), 0 0 32px rgba(124, 58, 237, 0.65);
+    }
+    .btn-buy { position: relative; overflow: hidden; }
+    .btn-buy::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(110deg, transparent 32%, rgba(255, 255, 255, 0.65) 50%, transparent 68%);
+      transform: translateX(-130%);
+      animation: sheen 3.8s ease-in-out infinite;
+    }
+    @keyframes sheen {
+      0%, 55% { transform: translateX(-130%); }
+      100% { transform: translateX(130%); }
+    }
+    .marquee-track { animation: marquee 36s linear infinite; }
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+    .float-car { animation: floaty 7s ease-in-out infinite; }
+    @keyframes floaty {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-14px); }
+    }
+    .logo-glow {
+      box-shadow:
+        0 0 0 1px rgba(246, 193, 91, 0.45),
+        0 0 40px rgba(124, 58, 237, 0.55),
+        0 30px 80px rgba(0, 0, 0, 0.45);
+    }
+    .toast {
+      transform: translateY(16px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease, transform 0.25s ease;
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+    .runway-dot { animation: blink 1.6s ease-in-out infinite; }
+    .runway-dot:nth-child(odd) { animation-delay: 0.4s; }
+    @keyframes blink {
+      0%, 100% { opacity: 0.35; }
+      50% { opacity: 1; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .marquee-track, .btn-buy::after, .float-car, .runway-dot { animation: none !important; }
+    }
+  </style>
+</head>
+<body class="min-h-screen text-white antialiased">
+  <div class="sky pointer-events-none fixed inset-0 z-0" aria-hidden="true"></div>
+  <div class="sky-grade pointer-events-none fixed inset-0 z-0" aria-hidden="true"></div>
+
+  <div class="relative z-10">
+    <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-gold-core focus:px-4 focus:py-2 focus:text-ink">Skip to content</a>
+
+    <div class="overflow-hidden border-b border-white/10 bg-black/50">
+      <div class="marquee-track flex w-max">
+        <p class="flex shrink-0 items-center gap-8 px-4 py-2 text-[11px] font-medium uppercase tracking-[0.28em] text-gold-light">
+          <span>$FSR</span><span class="text-violet-glow">·</span>
+          <span>Blazing through the blockchain</span><span class="text-violet-glow">·</span>
+          <span>Flying past the bears</span><span class="text-violet-glow">·</span>
+          <span>Taking memes to orbit</span><span class="text-violet-glow">·</span>
+          <span>Solana Roadster</span><span class="text-violet-glow">·</span>
+          <span>Ludicrous mode</span><span class="text-violet-glow">·</span>
+        </p>
+        <p class="flex shrink-0 items-center gap-8 px-4 py-2 text-[11px] font-medium uppercase tracking-[0.28em] text-gold-light" aria-hidden="true">
+          <span>$FSR</span><span class="text-violet-glow">·</span>
+          <span>Blazing through the blockchain</span><span class="text-violet-glow">·</span>
+          <span>Flying past the bears</span><span class="text-violet-glow">·</span>
+          <span>Taking memes to orbit</span><span class="text-violet-glow">·</span>
+          <span>Solana Roadster</span><span class="text-violet-glow">·</span>
+          <span>Ludicrous mode</span><span class="text-violet-glow">·</span>
+        </p>
+      </div>
+    </div>
+
+    <header class="sticky top-0 z-40 border-b border-white/10 bg-ink/70 backdrop-blur-xl">
+      <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
+        <a href="#top" class="flex items-center gap-3">
+          <img src="logo.jpg" alt="Flying Solana Roadster logo" class="h-11 w-11 rounded-full object-cover ring-2 ring-gold-core/80" />
+          <span class="leading-tight">
+            <span class="block font-display text-sm font-bold tracking-wide">$FSR</span>
+            <span class="hidden text-[10px] uppercase tracking-[0.22em] text-white/70 sm:block">Flying Solana Roadster</span>
+          </span>
+        </a>
+
+        <nav class="hidden items-center gap-8 text-sm text-white/80 md:flex" aria-label="Primary">
+          <a href="#mission" class="transition hover:text-gold-core">Mission</a>
+          <a href="#how-to-buy" class="transition hover:text-gold-core">How to Buy</a>
+          <a href="#chart" class="transition hover:text-gold-core">Chart</a>
+        </nav>
+
+        <div class="flex items-center gap-2 sm:gap-3">
+          <a href="https://t.me/FlySolRoadster" target="_blank" rel="noopener noreferrer" aria-label="Telegram" class="transition hover:scale-105">
+            <img src="tg.png" alt="" class="h-9 w-9 rounded-full" />
+          </a>
+          <a href="https://x.com/FlySolRoadster" target="_blank" rel="noopener noreferrer" aria-label="X" class="transition hover:scale-105">
+            <img src="x.png" alt="" class="h-9 w-9 rounded-lg" />
+          </a>
+          <a href="https://swap.pump.fun/?input=So11111111111111111111111111111111111111112&output=TBA" target="_blank" rel="noopener noreferrer" class="btn-buy hidden rounded-full bg-gradient-to-r from-gold-core to-gold-deep px-4 py-2 text-xs font-bold uppercase tracking-wider text-ink sm:inline-flex">
+            Buy Now
+          </a>
+          <button id="menuBtn" class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/5 md:hidden" aria-expanded="false" aria-controls="mobileMenu" aria-label="Open menu">
+            <svg id="iconOpen" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" d="M4 7h16M4 12h16M4 17h16"/></svg>
+            <svg id="iconClose" xmlns="http://www.w3.org/2000/svg" class="hidden h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" d="M6 6l12 12M18 6L6 18"/></svg>
+          </button>
+        </div>
+      </div>
+      <div id="mobileMenu" class="hidden border-t border-white/10 bg-ink/95 md:hidden">
+        <nav class="mx-auto flex max-w-6xl flex-col gap-1 px-4 py-3 text-sm" aria-label="Mobile">
+          <a href="#mission" class="rounded-lg px-3 py-3 hover:bg-white/5">Mission</a>
+          <a href="#how-to-buy" class="rounded-lg px-3 py-3 hover:bg-white/5">How to Buy</a>
+          <a href="#chart" class="rounded-lg px-3 py-3 hover:bg-white/5">Chart</a>
+          <a href="https://swap.pump.fun/?input=So11111111111111111111111111111111111111112&output=TBA" target="_blank" rel="noopener noreferrer" class="btn-buy mt-2 rounded-full bg-gradient-to-r from-gold-core to-gold-deep px-4 py-3 text-center text-xs font-bold uppercase tracking-wider text-ink">Buy Now</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main">
+      <section id="top" class="flex min-h-[100svh] flex-col justify-end px-4 pb-10 pt-28">
+        <div class="mx-auto w-full max-w-6xl">
+          <div class="glass hud-corner rounded-3xl p-6 sm:p-8 lg:p-10">
+            <div class="grid items-end gap-8 lg:grid-cols-[1.4fr_0.8fr]">
+              <div>
+                <p class="mb-4 inline-flex items-center gap-2 rounded-full border border-gold-core/40 bg-black/30 px-3 py-1 text-[11px] uppercase tracking-[0.28em] text-gold-light">
+                  <span class="h-1.5 w-1.5 rounded-full bg-gold-core shadow-[0_0_10px_#f6c15b]"></span>
+                  Solana · Ticker $FSR
+                </p>
+                <h1 class="font-display text-4xl font-extrabold uppercase leading-[0.95] tracking-tight sm:text-6xl lg:text-7xl">
+                  Flying<br />Solana<br />
+                  <span class="bg-gradient-to-r from-white via-gold-light to-violet-glow bg-clip-text text-transparent">Roadster</span>
+                </h1>
+                <div class="headlight my-6 max-w-xl"></div>
+                <p class="max-w-xl text-base leading-relaxed text-white/85 sm:text-lg">
+                  Flying Solana Roadster is blazing through the blockchain, flying past the bears, and taking memes to orbit!
+                </p>
+              </div>
+
+              <div class="flex flex-col gap-4">
+                <div class="flex flex-wrap gap-3">
+                  <a href="https://swap.pump.fun/?input=So11111111111111111111111111111111111111112&output=TBA" target="_blank" rel="noopener noreferrer" class="btn-buy inline-flex items-center justify-center rounded-full bg-gradient-to-r from-gold-core to-gold-deep px-6 py-3 text-sm font-bold uppercase tracking-wider text-ink">
+                    Buy Now
+                  </a>
+                  <a href="https://dexscreener.com/solana/TBA" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center rounded-full border border-violet-glow/50 bg-violet-core/30 px-6 py-3 text-sm font-semibold uppercase tracking-wider text-white transition hover:bg-violet-core/50">
+                    Chart
+                  </a>
+                </div>
+                <div class="flex items-center gap-3">
+                  <a href="https://t.me/FlySolRoadster" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-black/30 py-1 pl-1 pr-4 text-sm text-white/80 transition hover:border-violet-glow/50">
+                    <img src="tg.png" alt="" class="h-8 w-8 rounded-full" />
+                    Telegram
+                  </a>
+                  <a href="https://x.com/FlySolRoadster" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-black/30 py-1 pl-1 pr-4 text-sm text-white/80 transition hover:border-violet-glow/50">
+                    <img src="x.png" alt="" class="h-8 w-8 rounded-lg" />
+                    X
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-8 flex flex-col gap-3 rounded-2xl border border-white/10 bg-black/40 p-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:px-4">
+              <div class="min-w-0 px-2">
+                <p class="text-[10px] uppercase tracking-[0.28em] text-gold-core">Contract address</p>
+                <p class="truncate font-display text-lg tracking-widest text-white sm:text-xl" data-ca>TBA</p>
+              </div>
+              <button type="button" data-copy class="inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-violet-core px-5 py-3 text-sm font-semibold uppercase tracking-wider text-white transition hover:bg-violet-deep">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M4 16V6a2 2 0 0 1 2-2h10"/></svg>
+                <span data-copy-label>Copy CA</span>
+              </button>
+            </div>
+          </div>
+
+          <dl class="mt-4 grid grid-cols-2 gap-3 lg:grid-cols-4">
+            <div class="glass rounded-2xl px-4 py-4">
+              <dt class="text-[10px] uppercase tracking-[0.26em] text-gold-core">Chain</dt>
+              <dd class="mt-1 font-display text-lg">Solana</dd>
+            </div>
+            <div class="glass rounded-2xl px-4 py-4">
+              <dt class="text-[10px] uppercase tracking-[0.26em] text-gold-core">Symbol</dt>
+              <dd class="mt-1 font-display text-lg">$FSR</dd>
+            </div>
+            <div class="glass rounded-2xl px-4 py-4">
+              <dt class="text-[10px] uppercase tracking-[0.26em] text-gold-core">Mode</dt>
+              <dd class="mt-1 font-display text-lg">Ludicrous</dd>
+            </div>
+            <div class="glass rounded-2xl px-4 py-4">
+              <dt class="text-[10px] uppercase tracking-[0.26em] text-gold-core">Vector</dt>
+              <dd class="mt-1 font-display text-lg">Orbit</dd>
+            </div>
+          </dl>
+        </div>
+      </section>
+
+      <section id="mission" class="scroll-mt-24 px-4 py-20">
+        <div class="mx-auto grid max-w-6xl items-center gap-10 lg:grid-cols-2">
+          <div>
+            <p class="text-[11px] uppercase tracking-[0.32em] text-gold-core">Mission profile</p>
+            <h2 class="mt-3 font-display text-3xl uppercase leading-tight sm:text-5xl">Leave the bears in the clouds</h2>
+            <p class="mt-5 text-base leading-relaxed text-white/80 sm:text-lg">
+              A violet Roadster. A Solana drivetrain. Headlights on, altitude climbing. Flying Solana Roadster is the meme that refused the ground floor and punched straight through the atmosphere.
+            </p>
+            <blockquote class="mt-6 border-l-2 border-gold-core pl-5 text-lg font-medium leading-relaxed text-gold-light sm:text-xl">
+              Flying Solana Roadster is blazing through the blockchain, flying past the bears, and taking memes to orbit!
+            </blockquote>
+          </div>
+          <div class="float-car mx-auto w-full max-w-md">
+            <img src="logo.jpg" alt="Purple Flying Solana Roadster soaring above the clouds" class="logo-glow aspect-square w-full rounded-[2rem] object-cover" />
+          </div>
+        </div>
+      </section>
+
+      <section id="how-to-buy" class="scroll-mt-24 px-4 py-16">
+        <div class="mx-auto max-w-6xl">
+          <div class="max-w-2xl">
+            <p class="text-[11px] uppercase tracking-[0.32em] text-gold-core">Launch sequence</p>
+            <h2 class="mt-3 font-display text-3xl uppercase leading-tight sm:text-5xl">How to Buy</h2>
+            <p class="mt-4 text-white/75">Four steps to swap SOL for $FSR and climb aboard the Roadster.</p>
+          </div>
+
+          <ol class="mt-10 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+            <li class="glass hud-corner rounded-3xl p-6">
+              <p class="font-display text-3xl text-gold-core">01</p>
+              <h3 class="mt-4 font-display text-lg uppercase">Create a wallet</h3>
+              <p class="mt-3 text-sm leading-relaxed text-white/75">Install Phantom or Solflare and create a Solana wallet. Write the recovery phrase down offline. That phrase is the ignition key.</p>
+            </li>
+            <li class="glass hud-corner rounded-3xl p-6">
+              <p class="font-display text-3xl text-gold-core">02</p>
+              <h3 class="mt-4 font-display text-lg uppercase">Fuel up with SOL</h3>
+              <p class="mt-3 text-sm leading-relaxed text-white/75">Buy SOL on an exchange and send it to your wallet address. Keep a little extra SOL so the network fee does not empty the tank.</p>
+            </li>
+            <li class="glass hud-corner rounded-3xl p-6">
+              <p class="font-display text-3xl text-gold-core">03</p>
+              <h3 class="mt-4 font-display text-lg uppercase">Copy the CA</h3>
+              <p class="mt-3 text-sm leading-relaxed text-white/75">Copy the $FSR contract address below. Paste it into the swap so the route is locked onto Flying Solana Roadster.</p>
+              <button type="button" data-copy class="mt-4 inline-flex items-center gap-2 rounded-full border border-gold-core/40 px-4 py-2 text-xs font-semibold uppercase tracking-wider text-gold-light transition hover:bg-gold-core/10">
+                <span data-copy-label>Copy CA</span>
+                <span class="font-display tracking-widest" data-ca>TBA</span>
+              </button>
+            </li>
+            <li class="glass hud-corner rounded-3xl p-6">
+              <p class="font-display text-3xl text-gold-core">04</p>
+              <h3 class="mt-4 font-display text-lg uppercase">Swap and fly</h3>
+              <p class="mt-3 text-sm leading-relaxed text-white/75">Open Buy Now, connect your wallet, set SOL as the input, and confirm the swap. $FSR arrives in your wallet and the Roadster leaves the pad.</p>
+            </li>
+          </ol>
+
+          <div class="mt-8 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
+            <a href="https://swap.pump.fun/?input=So11111111111111111111111111111111111111112&output=TBA" target="_blank" rel="noopener noreferrer" class="btn-buy inline-flex items-center justify-center rounded-full bg-gradient-to-r from-gold-core to-gold-deep px-7 py-3 text-sm font-bold uppercase tracking-wider text-ink">
+              Buy Now
+            </a>
+            <p class="text-sm text-white/60">Swap SOL → $FSR on Pump.fun</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="chart" class="scroll-mt-24 px-4 py-16 pb-24">
+        <div class="mx-auto max-w-6xl">
+          <div class="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
+            <div>
+              <p class="text-[11px] uppercase tracking-[0.32em] text-gold-core">Flight data</p>
+              <h2 class="mt-3 font-display text-3xl uppercase leading-tight sm:text-5xl">Chart</h2>
+              <p class="mt-3 max-w-xl text-white/75">Track the Roadster live on Dexscreener while it blazes through the blockchain.</p>
+            </div>
+            <a href="https://dexscreener.com/solana/TBA" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center rounded-full border border-violet-glow/50 bg-violet-core/30 px-6 py-3 text-sm font-semibold uppercase tracking-wider transition hover:bg-violet-core/50">
+              Chart
+            </a>
+          </div>
+
+          <div class="glass mt-8 overflow-hidden rounded-3xl p-2 sm:p-3">
+            <div class="flex items-center justify-between px-3 py-2 text-[10px] uppercase tracking-[0.28em] text-white/50">
+              <span>Dexscreener · Solana · $FSR</span>
+              <span class="text-gold-core">Live embed</span>
+            </div>
+            <iframe
+              title="Dexscreener chart for Flying Solana Roadster"
+              src="https://dexscreener.com/solana/TBA?embed=1&loadChartSettings=0&trades=0&tabs=0&info=0&chartLeftToolbar=0&chartDefaultOnMobile=1&chartTheme=dark&theme=dark&chartStyle=1&chartType=usd&interval=15"
+              class="h-[440px] w-full rounded-2xl bg-black/40 sm:h-[560px]"
+              loading="lazy"
+            ></iframe>
+          </div>
+
+          <div class="glass mt-4 flex flex-col gap-3 rounded-2xl p-4 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p class="text-[10px] uppercase tracking-[0.28em] text-gold-core">Contract address</p>
+              <p class="mt-1 break-all font-display text-lg tracking-widest" data-ca>TBA</p>
+            </div>
+            <button type="button" data-copy class="inline-flex items-center justify-center gap-2 rounded-full bg-violet-core px-5 py-3 text-sm font-semibold uppercase tracking-wider transition hover:bg-violet-deep">
+              <span data-copy-label>Copy CA</span>
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="border-t border-white/10 bg-black/50 px-4 py-12">
+      <div class="mx-auto flex max-w-6xl flex-col items-center gap-6 text-center">
+        <div class="flex gap-2" aria-hidden="true">
+          <span class="runway-dot h-2 w-2 rounded-full bg-gold-core shadow-[0_0_10px_#f6c15b]"></span>
+          <span class="runway-dot h-2 w-2 rounded-full bg-white"></span>
+          <span class="runway-dot h-2 w-2 rounded-full bg-violet-glow shadow-[0_0_10px_#a78bfa]"></span>
+          <span class="runway-dot h-2 w-2 rounded-full bg-gold-core shadow-[0_0_10px_#f6c15b]"></span>
+          <span class="runway-dot h-2 w-2 rounded-full bg-white"></span>
+          <span class="runway-dot h-2 w-2 rounded-full bg-violet-glow shadow-[0_0_10px_#a78bfa]"></span>
+          <span class="runway-dot h-2 w-2 rounded-full bg-gold-core shadow-[0_0_10px_#f6c15b]"></span>
+        </div>
+        <a href="#top" class="flex flex-col items-center gap-3">
+          <img src="logo.jpg" alt="Flying Solana Roadster logo" class="h-16 w-16 rounded-full object-cover ring-2 ring-gold-core/70" />
+          <span class="font-display text-sm uppercase tracking-[0.22em]">Flying Solana Roadster · $FSR</span>
+        </a>
+        <div class="flex items-center gap-3">
+          <a href="https://t.me/FlySolRoadster" target="_blank" rel="noopener noreferrer" aria-label="Telegram">
+            <img src="tg.png" alt="" class="h-10 w-10 rounded-full transition hover:scale-105" />
+          </a>
+          <a href="https://x.com/FlySolRoadster" target="_blank" rel="noopener noreferrer" aria-label="X">
+            <img src="x.png" alt="" class="h-10 w-10 rounded-lg transition hover:scale-105" />
+          </a>
+        </div>
+        <div class="flex flex-wrap justify-center gap-3">
+          <a href="https://swap.pump.fun/?input=So11111111111111111111111111111111111111112&output=TBA" target="_blank" rel="noopener noreferrer" class="btn-buy rounded-full bg-gradient-to-r from-gold-core to-gold-deep px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-ink">Buy Now</a>
+          <a href="https://dexscreener.com/solana/TBA" target="_blank" rel="noopener noreferrer" class="rounded-full border border-violet-glow/40 px-5 py-2.5 text-xs font-semibold uppercase tracking-wider">Chart</a>
+        </div>
+        <p class="max-w-md text-xs leading-relaxed text-white/45">$FSR is a meme on Solana. Nothing here is financial advice. Fly responsibly.</p>
+      </div>
+    </footer>
+  </div>
+
+  <div id="toast" role="status" aria-live="polite" class="toast fixed bottom-5 left-1/2 z-50 -translate-x-1/2 rounded-full border border-gold-core/40 bg-ink/90 px-5 py-3 text-sm text-gold-light shadow-2xl backdrop-blur">
+    Contract address copied
+  </div>
+
+  <script>
+    const CA = "TBA";
+
+    document.querySelectorAll("[data-ca]").forEach((node) => {
+      node.textContent = CA;
+    });
+
+    async function copyText(value) {
+      try {
+        await navigator.clipboard.writeText(value);
+      } catch (err) {
+        const area = document.createElement("textarea");
+        area.value = value;
+        area.setAttribute("readonly", "");
+        area.style.position = "fixed";
+        area.style.left = "-9999px";
+        document.body.appendChild(area);
+        area.select();
+        document.execCommand("copy");
+        area.remove();
+      }
+    }
+
+    const toast = document.getElementById("toast");
+    let toastTimer;
+
+    document.querySelectorAll("[data-copy]").forEach((button) => {
+      button.addEventListener("click", async () => {
+        await copyText(CA);
+        const label = button.querySelector("[data-copy-label]");
+        const previous = label.textContent;
+        label.textContent = "Copied";
+        toast.classList.add("show");
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => {
+          label.textContent = previous;
+          toast.classList.remove("show");
+        }, 1600);
+      });
+    });
+
+    const menuBtn = document.getElementById("menuBtn");
+    const menu = document.getElementById("mobileMenu");
+    const iconOpen = document.getElementById("iconOpen");
+    const iconClose = document.getElementById("iconClose");
+
+    function setMenu(open) {
+      menu.classList.toggle("hidden", !open);
+      iconOpen.classList.toggle("hidden", open);
+      iconClose.classList.toggle("hidden", !open);
+      menuBtn.setAttribute("aria-expanded", String(open));
+      menuBtn.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+    }
+
+    menuBtn.addEventListener("click", () => {
+      setMenu(menu.classList.contains("hidden"));
+    });
+
+    menu.querySelectorAll("a").forEach((link) => {
+      link.addEventListener("click", () => setMenu(false));
+    });
+  </script>
+</body>
+</html>
