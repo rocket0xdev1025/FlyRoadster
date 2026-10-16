@@ -46,13 +46,11 @@
     ::-webkit-scrollbar-track { background: #100614; }
     ::-webkit-scrollbar-thumb { background: linear-gradient(#7c3aed, #f6c15b); border-radius: 99px; }
 
-    .sky {
-      background-image: url("banner.jpg");
-      background-size: cover;
-      background-position: center 38%;
+    .sky-video {
+      object-position: center 38%;
     }
     @media (max-width: 639px) {
-      .sky { background-position: center 46%; }
+      .sky-video { object-position: center 46%; }
     }
     .sky-grade {
       background:
@@ -138,7 +136,11 @@
   </style>
 </head>
 <body class="min-h-screen text-white antialiased">
-  <div class="sky pointer-events-none fixed inset-0 z-0" aria-hidden="true"></div>
+  <div class="pointer-events-none fixed inset-0 z-0 overflow-hidden" aria-hidden="true">
+    <video class="sky-video h-full w-full object-cover" autoplay muted loop playsinline poster="banner.jpg">
+      <source src="bg.mp4" type="video/mp4" />
+    </video>
+  </div>
   <div class="sky-grade pointer-events-none fixed inset-0 z-0" aria-hidden="true"></div>
 
   <div class="relative z-10">
